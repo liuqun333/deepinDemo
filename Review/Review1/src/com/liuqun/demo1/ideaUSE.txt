@@ -1,0 +1,9 @@
+快捷键：
+    Alt+Shift+F10，选择 Run
+    Ctrl+Shift+F10，运行
+
+
+快捷短语：
+    psvm：main函数快捷键
+    sout：System.out.println();
+    fori：for循环

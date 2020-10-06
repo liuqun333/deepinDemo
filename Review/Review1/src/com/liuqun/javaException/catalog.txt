@@ -1,0 +1,75 @@
+java异常
+异常类继承关系
+
+object
+    ——》Throable
+        ——》error
+            ——》OutOfMemoryError。。。
+        ——》exception
+            ——》runtimeException
+                ——》NullPointerException
+                ——》IllegalArgumentException
+            ——》IOException
+            ——》.....
+
+Throable是java异常体系的根，继承自Object，有两个体系error和Exception
+    Error表示严重的错误，程序对此一般无能为力，不需要捕获
+    而Exception则是运行时的错误，它可以也应该被捕获并处理
+        Exception有两大类
+            RuntimeException以及它的子类
+            非RuntimeException（包括IOException、ReflectiveOperationException等等）
+
+java规定
+      必须捕获的异常，包括Exception及其子类，但不包括RuntimeException及其子类，这种类型的异常称为Checked Exception。
+
+      不需要捕获的异常，包括Error及其子类，RuntimeException及其子类。
+
+可以用throws关键字抛出Checked Exception ，但是被更高层调用时，还是需要捕获
+
+使用printStackTrace方法 打印异常栈
+捕获异常并再次抛出新的异常时，异常栈会打印原始异常信息；	Caused by:xxx
+通常不要在finally中抛出异常。如果在finally中抛出异常，应该原始异常加入到原有异常中。调用方可通过Throwable.getSuppressed()获取所有添加的Suppressed Exception。
+
+自定义异常
+     抛出异常时，尽量复用JDK已定义的异常类型；
+
+     自定义异常体系时，推荐从RuntimeException派生“根异常”，再派生出业务异常；
+
+     自定义异常时，应该提供多种构造方法。
+
+使用printStackTrace方法 打印异常栈
+     捕获异常并再次抛出新的异常时，异常栈会打印原始异常信息；	Caused by:xxx
+     通常不要在finally中抛出异常。如果在finally中抛出异常，应该原始异常加入到原有异常中。调用方可通过Throwable.getSuppressed()获取所有添加的Suppressed Exception。
+
+
+
+
+java.lang.NumberFormatException: null
+    at java.base/java.lang.Integer.parseInt(Integer.java:614)
+    at java.base/java.lang.Integer.parseInt(Integer.java:770)
+    at Main.process2(Main.java:16)
+    at Main.process1(Main.java:12)
+    at Main.main(Main.java:5)
+
+    上述异常信息表示：NumberFormatException是在java.lang.Integer.parseInt方法中被抛出的，从下往上看，调用层次依次是：
+
+        main()调用process1()；
+        process1()调用process2()；
+        process2()调用Integer.parseInt(String)；
+        Integer.parseInt(String)调用Integer.parseInt(String, int)。
+
+NullPointerException：
+    空指针异常，俗称NPE。如果一个对象为null，调用其方法或访问其字段就会产生NullPointerException。
+
+
+
+Commons Logging:
+    这是一个Apache创建的日志模块，可以挂接不同的日志系统，默认挂接log4j
+        jar包地址：https://commons.apache.org/proper/commons-logging/download_logging.cgi
+
+log4j：
+    通过Commons Logging实现日志，不需要修改代码即可使用Log4j；
+    使用Log4j只需要把log4j2.xml和相关jar放入classpath；
+    如果要更换Log4j，只需要移除log4j2.xml和相关jar；
+    只有扩展Log4j时，才需要引用Log4j的接口（例如，将日志加密写入数据库的功能，需要自己开发）。
+    jar包地址：https://logging.apache.org/log4j/2.x/download.html

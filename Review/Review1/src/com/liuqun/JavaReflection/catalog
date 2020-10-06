@@ -1,0 +1,67 @@
+java加载一个类的流程是：
+    将.java文件编译成.class文件  然后用类加载器 将.class文件的内容封装成一个Class类对象，并加载进内存，最后我们才可以使用此类
+
+    通过Class实例获取class信息的方法称为反射（Reflection）；
+
+    我们可以使用反射机制根据.class文件获取一个类的所有内容/可以在程序运行中操作这些对象
+
+    JVM是动态加class文件的，运行过程中jvm发现会使用到某些类的时候才会加载class文件并且创建Class对象
+
+    我们可以从以下三种方法的任意一种中获取class的Class对象
+
+         方法一：直接通过一个class的静态变量class获取：
+         Class cls = String.class;
+         方法二：如果我们有一个实例变量，可以通过该实例变量提供的getClass()方法获取：
+         String s = "Hello";
+         Class cls = s.getClass();
+         方法三：如果知道一个class的完整类名，可以通过静态方法Class.forName()获取：
+         Class cls = Class.forName("java.lang.String");
+
+    注意：每一个类在一次运行中只会被加载一次，所以我们在一次运行中不管获取多少次String类的Class对象，他们都是相等的
+
+
+使用class的Class对象获取Class信息
+    获取字段信息的Class方法
+    Field[] getFields() 获取所有public的field（包括父类）
+    Field getField(String name)   根据字段名获取当前类的某个field（不包括父类）
+    Field[] getDeclaredFields()  获取所有public的变量（包括父类）
+    Field getDeclaredField(String name)  获取当前类的所有field（不包括父类）
+
+          一个Field对象包含了一个字段的所有信息：
+             getName()：返回字段名称，例如，"name"；
+             getType()：返回字段类型，也是一个Class实例，例如，String.class；
+             getModifiers()：返回字段的修饰符，它是一个int，不同的bit表示不同的含义。
+             get(Object):输入反射类的实例对象 返回字段内容
+             set(Object,Object).set方法修改字段值，第一个参数是输入指定实例，第二个参数是要修改成的值
+             获取private Fieldh值的时候 需要先设置setAccessible(true)
+                    public static void main(String[] args) throws Exception {
+                        Person p = new Person("Xiao Ming");
+                        System.out.println(p.getName()); // "Xiao Ming"
+                        Class c = p.getClass();
+                        Field f = c.getDeclaredField("name");
+                        f.setAccessible(true);
+                        f.set(p, "Xiao Hong");
+                        System.out.println(p.getName()); // "Xiao Hong"
+
+     class 获取 method信息
+          Method getMethod(name, Class...)：获取某个public的Method,参数是方法名和方法形参列表（包括父类）
+          Method getDeclaredMethod(name, Class...)：获取当前类的某个Method（不包括父类）
+          Method[] getMethods()：获取所有public的Method（包括父类）
+          Method[] getDeclaredMethods()：获取当前类的所有Method（不包括父类）
+          一个Method对象包含了一个方法的所有信息：
+               getName()：返回方法名称，例如："getScore"；
+               getReturnType()：返回方法返回值类型，也是一个Class实例，例如：String.class；
+               getParameterTypes()：返回方法的参数类型，是一个Class数组，例如：{String.class, int.class}；
+               getModifiers()：返回方法的修饰符，它是一个int，不同的bit表示不同的含义。
+               invoke[Object object,Class...]:通过invoke调用方法，参数是反射类实例对象和方法实参
+
+          如果获取到的Method表示一个静态方法，调用静态方法时，由于无需指定实例对象，所以invoke方法传入的第一个参数永远为null。
+
+          和Field类似，对于非public方法，我们虽然可以通过Class.getDeclaredMethod()获取该方法实例，但直接对其调用将得到一个IllegalAccessException。为了调用非public方法，我们通过Method.setAccessible(true)允许其调用：
+            public class Main {
+              public static void main(String[] args) throws Exception {
+              Person p = new Person();
+              Method m = p.getClass().getDeclaredMethod("setName", String.class);
+              m.setAccessible(true);
+              m.invoke(p, "Bob");
+              System.out.println(p.name);

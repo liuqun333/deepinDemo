@@ -1,0 +1,29 @@
+java核心类
+
+StringBuilder：可变字符类型
+               String内部是char数组，数组是不可变的
+               StringBuilder内部预分配了缓冲区，在StringBuilder中新增字符时，不会创建新对象
+StringJoiner: SpringJoiner是StringBuilder的升级版
+               可以更高效的进行字符拼接，比如说每次进行字符连接的时候都在中间加一个“.
+包装类：包装类型可以把基本数据类型转换成引用类型
+               boolean	 java.lang.Boolean
+               byte	     java.lang.Byte
+               short	 java.lang.Short
+               int	     java.lang.Integer
+               long	     java.lang.Long
+               float	 java.lang.Float
+               double	 java.lang.Double
+               char	     java.lang.Character
+javabean：private修饰成员变量，get，set操作变量的类叫javabean
+
+枚举类：如果想定义一组常量，可以使用枚举类
+
+BigInteger : 如果你要处理甚至超出long类型最大值的整数时，可以使用BigInteger
+
+BigDecimal : 和BigInteger类似，BigDecimal可以表达一个任意大小任意精度的浮点数
+
+Math : 数学类，可以用来处理数字
+
+random : 伪随机数类
+
+secureRandom ：安全随机数，类似于真随机数
